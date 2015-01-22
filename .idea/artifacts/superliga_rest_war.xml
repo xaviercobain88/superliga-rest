@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="superliga-rest:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="superliga-rest.war">
+      <element id="artifact" artifact-name="superliga-rest:war exploded" />
+    </root>
+  </artifact>
+</component>

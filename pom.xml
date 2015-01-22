@@ -93,6 +93,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+
 		<!-- Import the JAX-RS API, we use provided scope as the API is included 
 			in JBoss WildFly -->
 		<dependency>
@@ -100,6 +101,13 @@
 			<artifactId>jaxrs-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.spec.javax.interceptor</groupId>
+			<artifactId>jboss-interceptors-api_1.1_spec</artifactId>
+			<version>1.0.1.Final</version>
+		</dependency>
+
 
 		<!-- Import the JPA API, we use provided scope as the API is included in 
 			JBoss WildFly -->
@@ -197,8 +205,11 @@
 			<artifactId>hibernate-annotations</artifactId>
 			<version>3.5.6-Final</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
+		</dependency>
 
 
 	</dependencies>
