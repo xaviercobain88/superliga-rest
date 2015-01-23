@@ -3,7 +3,7 @@ package core.domain.model;
 import core.application.validator.ValidPassword;
 import core.domain.enums.SecuredManageableTypeEnum;
 import core.domain.enums.UserRegistrationStatusEnum;
-import core.domain.interfaces.SecuredManageable;
+import core.domain.contract.SecuredManageable;
 import core.domain.validator.DTOValidationGroup;
 import core.domain.validator.OnSaveValidationGroup;
 import org.hibernate.annotations.AnyMetaDef;
@@ -54,6 +54,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "secure_manageable_id"))
     protected List<SecuredManageable> securedManageables;
 
+
     public void addSecureManageable(SecuredManageable securedManageable) {
         if (securedManageable == null) {
             return;
@@ -65,7 +66,7 @@ public class User {
 
     }
 
-    public boolean isManageable(Long manageableResourceId, SecuredManageableTypeEnum securedManageableType) {
+    public boolean isManager(Long manageableResourceId, SecuredManageableTypeEnum securedManageableType) {
 
         if (securedManageables != null) {
             for (SecuredManageable securedManageable : securedManageables) {
@@ -76,6 +77,13 @@ public class User {
             }
         }
 
+        return false;
+    }
+
+    public boolean matchedPassword(String comparePassword){
+        if(comparePassword!=null&&password!=null){
+            return comparePassword.equals(password);
+        }
         return false;
     }
 

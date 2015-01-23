@@ -1,4 +1,4 @@
-package core.domain.interfaces;
+package core.domain.contract;
 
 import core.domain.enums.SecuredManageableTypeEnum;
 

@@ -1,9 +1,9 @@
 package security.aop;
 
+import core.application.exception.InternalServerErrorException;
 import core.domain.enums.SecuredManageableTypeEnum;
-import security.domain.annotation.SecuredModel;
+import core.domain.model.User;
 import security.application.contract.IModelAuthorizationService;
-import security.domain.model.User;
 
 import javax.ejb.EJB;
 import javax.enterprise.inject.Instance;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 /**
  * Created by xavier on 1/20/15.
  */
-public class Guard {
+public class ManageableResourceGuard {
 
     @EJB
     protected IModelAuthorizationService secureManageableService;
@@ -33,7 +33,7 @@ public class Guard {
         return ic.proceed();
     }
 
-    boolean isAllowed(InvocationContext ic, User u) {
+    boolean isAllowed(InvocationContext ic, User u) throws InternalServerErrorException {
         Method method = ic.getMethod();
         SecuredModel annotation = method.getAnnotation(SecuredModel.class);
 

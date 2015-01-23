@@ -4,16 +4,18 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import core.domain.enums.StatusEnum;
 import core.domain.exception.DomainModelNotLoadedException;
 import core.domain.infrastructure_service.IPlayerRepository;
 import core.domain.infrastructure_service.IUserRepository;
-import core.domain.interfaces.SecuredManageable;
+import core.domain.contract.SecuredManageable;
 import core.domain.model.Player;
 import core.domain.model.User;
 import core.infrastructure.exception.UnexpectedPersistenceException;
 import utils.exception.InvalidArgumentException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Stateless
@@ -21,7 +23,7 @@ public class UserRepository extends GenericRepository<User, Long> implements
 		IUserRepository {
 
 
-	@EJB
+	@Inject
 	protected IPlayerRepository playerRepository;
 
 	public UserRepository() {
@@ -47,5 +49,17 @@ public class UserRepository extends GenericRepository<User, Long> implements
 		return user;
 	}
 
+	@Override
+	public User findByUsername(String username, StatusEnum status) throws UnexpectedPersistenceException, DomainModelNotLoadedException {
+		String jpql = "select u from User u where u.username and p.status = :status";
+		HashMap<String, Object> params = new HashMap<>();
+		params.put("username", username);
+		params.put("status", status);
+		List<User> users = findByQuery(jpql, params);
+		if(users!=null && !users.isEmpty()){
+			return users.get(0);
+		}
+		throw  new DomainModelNotLoadedException("User with provided username not found");
 
+	}
 }

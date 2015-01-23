@@ -1,4 +1,4 @@
-package security.domain.annotation;
+package security.aop;
 
 import core.domain.enums.SecuredManageableTypeEnum;
 

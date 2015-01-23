@@ -1,5 +1,6 @@
 package security.application.contract;
 
+import core.application.exception.InternalServerErrorException;
 import core.domain.enums.SecuredManageableTypeEnum;
 
 import javax.ejb.Local;
@@ -10,5 +11,5 @@ import java.util.List;
  */
 @Local
 public interface IModelAuthorizationService {
-    boolean isAllowed(List<SecuredManageableTypeEnum> securedManageableTypes, Long id);
+    boolean isAllowed(List<SecuredManageableTypeEnum> securedManageableTypes, Long id) throws InternalServerErrorException;
 }

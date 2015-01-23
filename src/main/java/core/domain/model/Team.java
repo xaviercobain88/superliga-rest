@@ -1,11 +1,10 @@
 package core.domain.model;
 
-import core.domain.interfaces.SecuredManageable;
+import core.domain.contract.SecuredManageable;
 import core.domain.enums.SecuredManageableTypeEnum;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by xavier on 1/20/15.
@@ -17,13 +16,19 @@ public class Team implements SecuredManageable {
     @GeneratedValue
     protected Long id;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "team")
+    protected List<Player> players;
+
+    @ManyToMany(mappedBy = "teams")
+    protected List<Tournament> tournaments;
 
     @Override
     public SecuredManageableTypeEnum getSecuredManageableType() {
         return SecuredManageableTypeEnum.TEAM;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 }

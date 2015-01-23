@@ -22,7 +22,7 @@ public class PlayerRepository extends GenericRepository<Player, Long> implements
 
     @Override
     public List<Player> findByUserId(Long userId) throws UnexpectedPersistenceException {
-        String jpql = "select p from Player p where p.user.id = :userId and status = :status";
+        String jpql = "select p from Player p where p.user.id = :userId and p.status = :status";
         HashMap<String, Object> params = new HashMap<>();
         params.put("userId", userId);
         StatusEnum status = StatusEnum.ACTIVE;

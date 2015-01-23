@@ -19,7 +19,7 @@ public class UserProvider {
     @Produces
     @LoggedUser
     public User fetch(){
-        User user = new User(principal.getName());
+        User user = new User();
        // user.setPermissions(realm.getPermissionForPrincipal(principal.getName()));
         return user;
     }
