@@ -1,5 +1,6 @@
 package security.aop;
 
+import api_v1.controller.BaseController;
 import api_v1.controller.TokenTestController;
 import api_v1.util.RestApiResponse;
 import core.application.exception.InternalServerErrorException;
@@ -38,12 +39,12 @@ public class TokenGuard {
     @AroundInvoke
 
     public Object validateToken(InvocationContext ic) throws Exception {
-        TokenTestController tokenTestController = (TokenTestController) ic.getTarget();
-        tokenTestController.getHttpRequest().getRequestURI();
+        BaseController baseController = (BaseController) ic.getTarget();
+        baseController.getHttpRequest().getRequestURI();
         List<NameValuePair> params = null;
         try {
-            params = URLEncodedUtils.parse(new URI(tokenTestController.getHttpRequest().getQueryString() + "?" +
-                    tokenTestController.getHttpRequest().getQueryString()), "UTF-8");
+            params = URLEncodedUtils.parse(new URI(baseController.getHttpRequest().getQueryString() + "?" +
+                    baseController.getHttpRequest().getQueryString()), "UTF-8");
             for (NameValuePair param : params) {
                 if (param.getName().trim().toUpperCase().equals(TOKEN)) {
                     token = param.getValue();
@@ -61,9 +62,7 @@ public class TokenGuard {
             e.printStackTrace();
             RestApiResponse<Object> restApiResponse = new RestApiResponse<>();
             restApiResponse.addDangerMessage(e.getMessage());
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            String json = ow.writeValueAsString(restApiResponse);
-            return json;
+            return restApiResponse;
         }
 
 

@@ -3,6 +3,7 @@ package api_v1.controller;
 import api_v1.util.BaseApiResponse;
 import api_v1.util.RestApiResponse;
 import core.application.contract.ITournamentService;
+import core.application.dto.StageDTO;
 import core.application.dto.TournamentDTO;
 import core.application.exception.UnauthorizedException;
 import security.aop.SecuredByToken;
@@ -18,20 +19,21 @@ import javax.ws.rs.core.MediaType;
 /**
  * Created by xavier on 1/24/15.
  */
-@Path("/users")
+@Path("/tournaments")
 @RequestScoped
-public class UsersController extends BaseController {
+public class TournamentsController extends BaseController {
 
 
     @Inject
     protected ITournamentService tournamentService;
 
-    @Path("/{userId}/tournaments")
+    @Path("/{tournamentId}/stage/{order}")
     @SecuredByToken
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public BaseApiResponse createTournament(@Valid TournamentDTO tournamentDTO, @PathParam("userId") @NotNull @Min(1) Long userId) {
+    public BaseApiResponse setStage(@Valid StageDTO stageDTO, @PathParam("tournamentId") @NotNull @Min(1) Long tournamentId,
+                                    @PathParam("order") @NotNull Integer order) {
         RestApiResponse<TournamentDTO> restApiMapResponse = new RestApiResponse<>();
 
         try {

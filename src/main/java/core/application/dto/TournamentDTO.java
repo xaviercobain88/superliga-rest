@@ -1,5 +1,8 @@
 package core.application.dto;
 
+import core.domain.enums.DisciplineEnum;
+import core.domain.enums.PlayingModeEnum;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -9,6 +12,8 @@ public class TournamentDTO {
     @Size(min = 2, max = 200)
     protected String name;
     protected Long id;
+    @NotNull
+    protected DisciplineEnum discipline;
 
     public String getName() {
         return name;
@@ -24,5 +29,13 @@ public class TournamentDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public DisciplineEnum getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(DisciplineEnum discipline) {
+        this.discipline = discipline;
     }
 }

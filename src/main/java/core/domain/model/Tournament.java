@@ -1,5 +1,6 @@
 package core.domain.model;
 
+import core.domain.enums.DisciplineEnum;
 import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.MetaValue;
@@ -19,10 +20,13 @@ public class Tournament implements SecuredManageable {
     @GeneratedValue
     protected Long id;
     protected String name;
+    protected DisciplineEnum discipline;
 
 
-    public Tournament(String name) {
+
+    public Tournament(String name, DisciplineEnum discipline) {
         this.name = name;
+        this.discipline = discipline;
     }
 
     public Tournament() {
@@ -50,4 +54,9 @@ public class Tournament implements SecuredManageable {
     public String getName() {
         return name;
     }
+
+    public DisciplineEnum getDiscipline() {
+        return discipline;
+    }
+
 }

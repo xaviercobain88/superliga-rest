@@ -5,17 +5,14 @@ import core.application.dto.TournamentDTO;
 import core.application.exception.InternalServerErrorException;
 import core.application.exception.UnauthorizedException;
 import core.domain.contract.ITournamentHandler;
-import core.domain.contract.ITournamentRepository;
 import core.domain.model.Tournament;
 import core.infrastructure.exception.UnexpectedPersistenceException;
 import org.apache.commons.beanutils.BeanUtils;
-import security.aop.ManageableResourceGuard;
 import security.aop.SecuredModel;
 import security.domain.enums.SecuredManageableTypeEnum;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.interceptor.Interceptors;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -33,9 +30,9 @@ public class TournamentService implements ITournamentService {
 
     @Override
     @SecuredModel(securedManageableTypes = SecuredManageableTypeEnum.USER)
-    @Interceptors(ManageableResourceGuard.class)
-    public TournamentDTO create(@NotNull @Min(1) Long userId,  @Valid TournamentDTO tournamentDTO) throws InternalServerErrorException , UnauthorizedException {
-        Tournament tournament = new Tournament(tournamentDTO.getName());
+
+    public TournamentDTO create(@NotNull @Min(1) Long userId, @Valid TournamentDTO tournamentDTO) throws InternalServerErrorException, UnauthorizedException {
+        Tournament tournament = new Tournament(tournamentDTO.getName(), tournamentDTO.getDiscipline());
 
         try {
             tournamentHandler.create(userId, tournament);

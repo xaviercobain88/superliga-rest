@@ -9,4 +9,7 @@ import javax.ws.rs.core.Context;
 public class BaseController {
     @Context
     protected HttpServletRequest httpRequest;
+    public HttpServletRequest getHttpRequest() {
+        return httpRequest;
+    }
 }

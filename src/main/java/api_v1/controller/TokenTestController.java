@@ -24,7 +24,7 @@ public class TokenTestController extends BaseController{
 
 
     @GET
-    @Interceptors(TokenGuard.class)
+    @SecuredByToken
     @Path("/secure")
     @Produces(MediaType.APPLICATION_JSON)
     public String securedTest(){
@@ -38,7 +38,5 @@ public class TokenTestController extends BaseController{
         return "No es seguro";
     }
 
-    public HttpServletRequest getHttpRequest() {
-        return httpRequest;
-    }
+
 }
