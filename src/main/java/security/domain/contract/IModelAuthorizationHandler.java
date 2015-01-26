@@ -1,7 +1,6 @@
 package security.domain.contract;
 
-import core.domain.enums.SecuredManageableTypeEnum;
-import core.domain.exception.DomainModelNotLoadedException;
+import security.domain.enums.SecuredManageableTypeEnum;
 import core.domain.model.User;
 import core.infrastructure.exception.UnexpectedPersistenceException;
 import utils.exception.InvalidArgumentException;
@@ -14,6 +13,6 @@ import java.util.List;
  */
 @Local
 public interface IModelAuthorizationHandler {
-    boolean isAllowed(List<SecuredManageableTypeEnum> securedManageableTypes, Long manageableResourceId, User user) throws UnexpectedPersistenceException, InvalidArgumentException;
+    boolean isAllowed(List<SecuredManageableTypeEnum> securedManageableTypes, Long manageableResourceId, Long userId) throws UnexpectedPersistenceException, InvalidArgumentException;
 
 }

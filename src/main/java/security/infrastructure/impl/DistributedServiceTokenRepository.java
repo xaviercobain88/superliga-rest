@@ -1,7 +1,5 @@
 package security.infrastructure.impl;
 
-import core.domain.infrastructure_service.ITeamRepository;
-import core.domain.model.Team;
 import core.infrastructure.impl.GenericRepository;
 import security.domain.contract.IDistributedServiceTokenRepository;
 import security.domain.model.DistributedServiceToken;

@@ -1,7 +1,7 @@
 package security.application.contract;
 
 import core.application.exception.InternalServerErrorException;
-import core.domain.enums.SecuredManageableTypeEnum;
+import security.domain.enums.SecuredManageableTypeEnum;
 
 import javax.ejb.Local;
 import java.util.List;

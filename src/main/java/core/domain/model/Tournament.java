@@ -1,7 +1,10 @@
 package core.domain.model;
 
-import core.domain.contract.SecuredManageable;
-import core.domain.enums.SecuredManageableTypeEnum;
+import org.hibernate.annotations.AnyMetaDef;
+import org.hibernate.annotations.ManyToAny;
+import org.hibernate.annotations.MetaValue;
+import security.domain.contract.SecuredManageable;
+import security.domain.enums.SecuredManageableTypeEnum;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,10 +18,14 @@ public class Tournament implements SecuredManageable {
     @Id
     @GeneratedValue
     protected Long id;
+    protected String name;
 
-    @Override
-    public Long getId() {
-        return id;
+
+    public Tournament(String name) {
+        this.name = name;
+    }
+
+    public Tournament() {
     }
 
     @ManyToMany
@@ -31,7 +38,16 @@ public class Tournament implements SecuredManageable {
     protected List<Team> teams;
 
     @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
     public SecuredManageableTypeEnum getSecuredManageableType() {
         return SecuredManageableTypeEnum.TOURNAMENT;
+    }
+
+    public String getName() {
+        return name;
     }
 }

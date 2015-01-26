@@ -1,11 +1,8 @@
 package core.domain.model;
 
-import core.application.validator.ValidPassword;
-import core.domain.enums.SecuredManageableTypeEnum;
-import core.domain.enums.UserRegistrationStatusEnum;
-import core.domain.contract.SecuredManageable;
-import core.domain.validator.DTOValidationGroup;
-import core.domain.validator.OnSaveValidationGroup;
+import core.domain.enums.StatusEnum;
+import security.domain.enums.SecuredManageableTypeEnum;
+import security.domain.contract.SecuredManageable;
 import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.MetaValue;
@@ -15,9 +12,8 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "user")
-@ValidPassword(groups = DTOValidationGroup.class, message = "{errors.validation.valid_password.user}")
-public class User {
+@Entity
+public class User implements SecuredManageable{
 
 
     @Id
@@ -29,16 +25,13 @@ public class User {
     protected String firstName;
     @NotNull(message = "{errors.validation.not_null.user.last_name}")
     protected String lastName;
-    @NotNull(groups = OnSaveValidationGroup.class)
     protected String password;
     protected String token;
-    @Enumerated(EnumType.STRING)
-    protected UserRegistrationStatusEnum registrationStatus;
     @ManyToAny(
             metaColumn = @Column(name = "secure_manageable_type")
     )
     @AnyMetaDef(
-            idType = "integer",
+            idType = "long",
             metaType = "string",
             metaValues = {
                     @MetaValue(
@@ -53,6 +46,8 @@ public class User {
     @JoinTable(name = "user_secure_manageable", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "secure_manageable_id"))
     protected List<SecuredManageable> securedManageables;
+    @Enumerated(EnumType.STRING)
+    protected StatusEnum status;
 
 
     public void addSecureManageable(SecuredManageable securedManageable) {
@@ -81,6 +76,7 @@ public class User {
     }
 
     public boolean matchedPassword(String comparePassword){
+
         if(comparePassword!=null&&password!=null){
             return comparePassword.equals(password);
         }
@@ -128,5 +124,12 @@ public class User {
         this.token = token;
     }
 
+    public String getPassword() {
+        return password;
+    }
 
+    @Override
+    public SecuredManageableTypeEnum getSecuredManageableType() {
+        return SecuredManageableTypeEnum.USER;
+    }
 }

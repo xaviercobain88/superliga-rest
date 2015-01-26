@@ -1,13 +1,11 @@
 package core.infrastructure.impl;
 
 import core.domain.enums.StatusEnum;
-import core.domain.infrastructure_service.IPlayerRepository;
+import core.domain.contract.IPlayerRepository;
 import core.domain.model.Player;
-import core.domain.model.User;
 import core.infrastructure.exception.UnexpectedPersistenceException;
 
 import javax.ejb.Stateless;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

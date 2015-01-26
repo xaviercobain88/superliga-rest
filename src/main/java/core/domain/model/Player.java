@@ -1,12 +1,10 @@
 package core.domain.model;
 
-import core.domain.contract.SecuredManageable;
-import core.domain.enums.SecuredManageableTypeEnum;
+import security.domain.contract.SecuredManageable;
+import security.domain.enums.SecuredManageableTypeEnum;
 import core.domain.enums.StatusEnum;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by xavier on 1/20/15.

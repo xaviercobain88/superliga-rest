@@ -1,9 +1,9 @@
 package security.domain.impl;
 
-import core.domain.enums.SecuredManageableTypeEnum;
+import security.domain.enums.SecuredManageableTypeEnum;
 import core.domain.exception.DomainModelNotLoadedException;
-import core.domain.infrastructure_service.ITeamRepository;
-import core.domain.infrastructure_service.IUserRepository;
+import core.domain.contract.ITeamRepository;
+import core.domain.contract.IUserRepository;
 import core.domain.model.Team;
 import core.domain.model.User;
 import core.infrastructure.exception.UnexpectedPersistenceException;
@@ -26,20 +26,18 @@ public class ModelAuthorizationHandler implements IModelAuthorizationHandler {
     protected ITeamRepository teamRepository;
 
     @Override
-    public boolean isAllowed(List<SecuredManageableTypeEnum> securedManageableTypes, Long manageableResourceId, User user) throws UnexpectedPersistenceException, InvalidArgumentException {
-        if (user == null || user.getId() < 1 || securedManageableTypes == null || securedManageableTypes.isEmpty()) {
-            return false;
-        }
+    public boolean isAllowed(List<SecuredManageableTypeEnum> securedManageableTypes, Long manageableResourceId, Long userId) throws UnexpectedPersistenceException, InvalidArgumentException {
+
         //TODO: verificar que el user que llega como parametro no se desatacha
         User userWithManageablePermissions = null;
         try {
-            userWithManageablePermissions = userRepository.loadWithAllPermission(user.getId());
+            userWithManageablePermissions = userRepository.loadWithAllPermission(userId);
         } catch (DomainModelNotLoadedException e) {
             e.printStackTrace();
             return false;
         }
 
-        if (securedManageableTypes.size() > 1) {
+        if (securedManageableTypes.size() >= 1) {
             if (userWithManageablePermissions.isManager(manageableResourceId, securedManageableTypes.get(0))) {
                 return true;
             }

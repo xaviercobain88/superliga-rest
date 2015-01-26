@@ -1,20 +1,11 @@
 package core.infrastructure.impl;
 
-import core.domain.contract.SecuredManageable;
 import core.domain.enums.StatusEnum;
-import core.domain.exception.DomainModelNotLoadedException;
-import core.domain.infrastructure_service.IPlayerRepository;
-import core.domain.infrastructure_service.ITeamRepository;
-import core.domain.infrastructure_service.IUserRepository;
-import core.domain.model.Player;
+import core.domain.contract.ITeamRepository;
 import core.domain.model.Team;
-import core.domain.model.User;
 import core.infrastructure.exception.UnexpectedPersistenceException;
-import utils.exception.InvalidArgumentException;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

@@ -10,7 +10,7 @@ public class ListUtils {
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		} else {
-			throw new InvalidArgumentException();
+			throw new InvalidArgumentException("List object is not valid");
 		}
 	}
 }

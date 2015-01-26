@@ -2,7 +2,7 @@ package core.application.contract;
 
 import javax.ejb.Local;
 
-import core.application.dto.UserDTO;
+import security.application.dto.UserDTO;
 
 @Local
 public interface IRegistrationService {

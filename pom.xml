@@ -210,9 +210,19 @@
 			<artifactId>javaee-api</artifactId>
 			<version>6.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.8.5</version>
+		</dependency>
 
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>codehaus</id>
+			<url>http://repository.codehaus.org/org/codehaus</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<!-- Maven will append the version to the finalName (which is the name 

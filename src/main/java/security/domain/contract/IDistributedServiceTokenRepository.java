@@ -1,7 +1,6 @@
 package security.domain.contract;
 
-import core.domain.infrastructure_service.IGenericRepository;
-import core.domain.model.Team;
+import core.domain.contract.IGenericRepository;
 import security.domain.model.DistributedServiceToken;
 
 import javax.ejb.Local;

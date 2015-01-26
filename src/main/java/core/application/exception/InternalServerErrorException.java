@@ -8,8 +8,8 @@ public class InternalServerErrorException extends ServiceException{
 	private static final long serialVersionUID = 1L;
 	public static final Integer code = 500;
 
-	public InternalServerErrorException(String message) {
-		super(message);
+	public InternalServerErrorException() {
+		super("Hubo un error en el sistema, por favor intente más tarde");
 	}
 
 	@Override

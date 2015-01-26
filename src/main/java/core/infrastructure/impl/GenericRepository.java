@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.validation.constraints.NotNull;
 
 import core.infrastructure.exception.UnexpectedPersistenceException;
 
@@ -94,6 +95,16 @@ public class GenericRepository<T, PK extends Serializable> {
 	public List<T> findByQuery(String jpql, Map<String, Object> parameters)
 			throws UnexpectedPersistenceException {
 		return findByQuery(jpql, parameters, PAGE, MAZ_SIZE);
+	}
+
+	public boolean executeUpdate(@NotNull String jpql, Map<String, Object> parameters){
+		Query query =entityManager.createNativeQuery(jpql);
+		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
+		for (Entry<String, Object> entry : rawParameters) {
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+		query.executeUpdate();
+		return true;
 	}
 
 }

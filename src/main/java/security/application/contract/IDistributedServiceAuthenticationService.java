@@ -1,7 +1,8 @@
 package security.application.contract;
 
 import core.application.exception.InternalServerErrorException;
-import security.domain.exception.UnauthorizedException;
+import core.application.exception.UnauthorizedException;
+import security.application.dto.UserDTO;
 
 import javax.ejb.Local;
 
@@ -11,5 +12,7 @@ import javax.ejb.Local;
 @Local
 public interface IDistributedServiceAuthenticationService {
     boolean isValidToken(String token);
-    public String getToken(String username, String hashedPassword) throws InternalServerErrorException, UnauthorizedException;
+    public String getToken(Long userId) throws InternalServerErrorException, UnauthorizedException;
+    UserDTO login(String username, String password) throws InternalServerErrorException, UnauthorizedException;
+    UserDTO loginByToken(String token) throws UnauthorizedException, InternalServerErrorException;
 }

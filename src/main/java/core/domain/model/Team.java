@@ -1,7 +1,7 @@
 package core.domain.model;
 
-import core.domain.contract.SecuredManageable;
-import core.domain.enums.SecuredManageableTypeEnum;
+import security.domain.contract.SecuredManageable;
+import security.domain.enums.SecuredManageableTypeEnum;
 
 import javax.persistence.*;
 import java.util.List;

@@ -1,14 +1,13 @@
 package core.infrastructure.impl;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import core.domain.enums.StatusEnum;
 import core.domain.exception.DomainModelNotLoadedException;
-import core.domain.infrastructure_service.IPlayerRepository;
-import core.domain.infrastructure_service.IUserRepository;
-import core.domain.contract.SecuredManageable;
+import core.domain.contract.IPlayerRepository;
+import core.domain.contract.IUserRepository;
+import security.domain.contract.SecuredManageable;
 import core.domain.model.Player;
 import core.domain.model.User;
 import core.infrastructure.exception.UnexpectedPersistenceException;
@@ -45,13 +44,14 @@ public class UserRepository extends GenericRepository<User, Long> implements
 		for(SecuredManageable securedManageable: players){
 			user.addSecureManageable(securedManageable);
 		}
+		user.addSecureManageable(user);
 
 		return user;
 	}
 
 	@Override
 	public User findByUsername(String username, StatusEnum status) throws UnexpectedPersistenceException, DomainModelNotLoadedException {
-		String jpql = "select u from User u where u.username and p.status = :status";
+		String jpql = "select u from User u where u.username=:username and u.status = :status";
 		HashMap<String, Object> params = new HashMap<>();
 		params.put("username", username);
 		params.put("status", status);
@@ -62,4 +62,21 @@ public class UserRepository extends GenericRepository<User, Long> implements
 		throw  new DomainModelNotLoadedException("User with provided username not found");
 
 	}
+
+	public User findByUsername(String username) throws UnexpectedPersistenceException, DomainModelNotLoadedException{
+		return findByUsername(username, StatusEnum.ACTIVE);
+	}
+	@Override
+	public User findByToken(String token) throws UnexpectedPersistenceException, DomainModelNotLoadedException {
+		String jpql = "select t.user from DistributedServiceToken t where t.token=:token";
+		HashMap<String, Object> params = new HashMap<>();
+		params.put("token", token);
+		List<User> users = findByQuery(jpql, params);
+		if(users!=null && !users.isEmpty()){
+			return users.get(0);
+		}
+		throw  new DomainModelNotLoadedException("User with provided token not found");
+	}
+
+
 }

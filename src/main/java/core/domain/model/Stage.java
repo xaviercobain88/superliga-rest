@@ -1,13 +1,12 @@
 package core.domain.model;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.List;
-
+@Entity
 public class Stage {
 
+	@Id
+	@GeneratedValue
 	protected Long id;
 	@ManyToOne
 	@JoinColumn(name = "next_stage_id")
@@ -22,6 +21,7 @@ public class Stage {
 	protected List<Stage> outputTargetStages;
 	@ManyToMany(mappedBy = "outputTargetStages")
 	protected List<Stage> inputSourceStages;
+	@Transient
 	protected List<Group> groups;
 	
 	

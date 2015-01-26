@@ -14,5 +14,5 @@ import javax.ejb.Local;
 public interface IDistributedServiceTokenHandler {
     boolean isValid(String token);
 
-    public String getToken(String username, String hashedPassword) throws InvalidArgumentException, UnexpectedPersistenceException, DomainModelNotLoadedException, UnauthorizedException;
+    public String getToken(Long userId) throws InvalidArgumentException, UnexpectedPersistenceException, DomainModelNotLoadedException;
 }
