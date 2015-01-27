@@ -13,9 +13,10 @@ public class StageDTO {
     @NotNull
     protected PlayingModeEnum mode;
     @Min(2)
-    protected Integer registeredTeams;
+    protected Integer inputTeams;
     @Min(1)
-    protected Integer classifiedTeams;
+    protected Integer ouputTeams;
+    protected Integer groupsNumber;
 
     public Long getId() {
         return id;
@@ -33,19 +34,27 @@ public class StageDTO {
         this.mode = mode;
     }
 
-    public Integer getRegisteredTeams() {
-        return registeredTeams;
+    public Integer getInputTeams() {
+        return inputTeams;
     }
 
-    public void setRegisteredTeams(Integer registeredTeams) {
-        this.registeredTeams = registeredTeams;
+    public void setInputTeams(Integer inputTeams) {
+        this.inputTeams = inputTeams;
     }
 
-    public Integer getClassifiedTeams() {
-        return classifiedTeams;
+    public Integer getOuputTeams() {
+        return ouputTeams;
     }
 
-    public void setClassifiedTeams(Integer classifiedTeams) {
-        this.classifiedTeams = classifiedTeams;
+    public void setOuputTeams(Integer ouputTeams) {
+        this.ouputTeams = ouputTeams;
+    }
+
+    public Integer getGroupsNumber() {
+        return groupsNumber;
+    }
+
+    public void setGroupsNumber(Integer groupsNumber) {
+        this.groupsNumber = groupsNumber;
     }
 }

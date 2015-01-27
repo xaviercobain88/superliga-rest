@@ -6,6 +6,7 @@ import core.application.contract.ITournamentService;
 import core.application.dto.StageDTO;
 import core.application.dto.TournamentDTO;
 import core.application.exception.UnauthorizedException;
+import core.domain.model.Tournament;
 import security.aop.SecuredByToken;
 
 import javax.enterprise.context.RequestScoped;
@@ -15,6 +16,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Created by xavier on 1/24/15.
@@ -32,12 +34,12 @@ public class TournamentsController extends BaseController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public BaseApiResponse setStage(@Valid StageDTO stageDTO, @PathParam("tournamentId") @NotNull @Min(1) Long tournamentId,
-                                    @PathParam("order") @NotNull Integer order) {
+    public BaseApiResponse setStage(@PathParam("tournamentId") @Min(1) Long tournamentId,
+                                    @Valid List<StageDTO> stageDTOs) {
         RestApiResponse<TournamentDTO> restApiMapResponse = new RestApiResponse<>();
 
         try {
-            TournamentDTO newTournamentDTO = tournamentService.create(userId, tournamentDTO);
+            TournamentDTO newTournamentDTO = tournamentService.setStages(tournamentId, stageDTOs);
             restApiMapResponse.setData(newTournamentDTO);
 
         } catch (core.application.exception.InternalServerErrorException | UnauthorizedException e) {
