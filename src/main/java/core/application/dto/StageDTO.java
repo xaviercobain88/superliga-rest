@@ -15,7 +15,7 @@ public class StageDTO {
     @Min(2)
     protected Integer inputTeams;
     @Min(1)
-    protected Integer ouputTeams;
+    protected Integer outputTeams;
     protected Integer groupsNumber;
 
     public Long getId() {
@@ -42,12 +42,12 @@ public class StageDTO {
         this.inputTeams = inputTeams;
     }
 
-    public Integer getOuputTeams() {
-        return ouputTeams;
+    public Integer getOutputTeams() {
+        return outputTeams;
     }
 
-    public void setOuputTeams(Integer ouputTeams) {
-        this.ouputTeams = ouputTeams;
+    public void setOutputTeams(Integer outputTeams) {
+        this.outputTeams = outputTeams;
     }
 
     public Integer getGroupsNumber() {

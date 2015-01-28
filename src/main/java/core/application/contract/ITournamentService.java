@@ -2,6 +2,7 @@ package core.application.contract;
 
 import core.application.dto.StageDTO;
 import core.application.dto.TournamentDTO;
+import core.application.exception.BadRequestException;
 import core.application.exception.InternalServerErrorException;
 import core.application.exception.UnauthorizedException;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -16,5 +17,5 @@ import java.util.List;
 public interface ITournamentService {
     TournamentDTO create(@NotNull @Min(1) Long userId, @Valid TournamentDTO tournamentDTO) throws InternalServerErrorException, UnauthorizedException;
 
-    StageDTO setStages(@Min(1) Long tournamentId, @Valid @NotEmpty List<StageDTO> stageDTOs);
+    List<StageDTO> setStages(@Min(1) Long tournamentId, @Valid @NotEmpty List<StageDTO> stageDTOs) throws InternalServerErrorException, BadRequestException;
 }

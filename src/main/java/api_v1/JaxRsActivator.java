@@ -16,10 +16,7 @@
  */
 package api_v1;
 
-import api_v1.controller.DisciplinesController;
-import api_v1.controller.LoginController;
-import api_v1.controller.TokenTestController;
-import api_v1.controller.UsersController;
+import api_v1.controller.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,6 +44,7 @@ public class JaxRsActivator extends Application {
 		classes.add(TokenTestController.class);
 		classes.add(DisciplinesController.class);
 		classes.add(UsersController.class);
+		classes.add(TournamentsController.class);
 	}
 
 	@Override

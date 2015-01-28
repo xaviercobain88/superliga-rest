@@ -5,14 +5,16 @@ import core.domain.enums.PlayingModeEnum;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 
-@Entity
+@Entity(name = "stage_group")
 public class Group {
 
 	@Id
 	@GeneratedValue
 	protected Long id;
+	@Column(name = "group_order")
 	protected Integer order;
 	@Enumerated(EnumType.STRING)
+	@Column(name = "group_mode")
 	protected PlayingModeEnum mode;
 	@Min(2)
 	protected Integer inputTeams;
@@ -39,11 +41,15 @@ public class Group {
 		this.inputTeams = inputTeams;
 	}
 
-	public void setOuputTeams(Integer ouputTeams) {
+	public void setOutputTeams(Integer outputTeams) {
 		this.ouputTeams = ouputTeams;
 	}
 
 	public void setMode(PlayingModeEnum mode) {
 		this.mode = mode;
+	}
+
+	public Integer getInputTeams() {
+		return inputTeams;
 	}
 }

@@ -3,9 +3,12 @@ package core.application.imp;
 import core.application.contract.ITournamentService;
 import core.application.dto.StageDTO;
 import core.application.dto.TournamentDTO;
+import core.application.exception.BadRequestException;
 import core.application.exception.InternalServerErrorException;
 import core.application.exception.UnauthorizedException;
 import core.domain.contract.ITournamentHandler;
+import core.domain.exception.InvalidArgumentsForTournamentSetupException;
+import core.domain.model.Stage;
 import core.domain.model.Tournament;
 import core.infrastructure.exception.UnexpectedPersistenceException;
 import org.apache.commons.beanutils.BeanUtils;
@@ -19,6 +22,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,7 +53,26 @@ public class TournamentService implements ITournamentService {
     }
 
     @Override
-    public StageDTO setStages(@Min(1) Long tournamentId, @Valid @NotEmpty List<StageDTO> stageDTOs) {
-        return null;
+    public List<StageDTO> setStages(@Min(1) Long tournamentId, @Valid @NotEmpty List<StageDTO> stageDTOs) throws InternalServerErrorException, BadRequestException {
+        List<Stage> stages = new ArrayList<>();
+
+        try {
+            for (StageDTO stageDTO:stageDTOs){
+                Stage stage = new Stage();
+                    BeanUtils.copyProperties(stage, stageDTO);
+                stage.setDefaultGroupsNumber();
+                stages.add(stage);
+
+            }
+            tournamentHandler.setStages(tournamentId, stages);
+        } catch (InvocationTargetException | IllegalAccessException | UnexpectedPersistenceException e) {
+            e.printStackTrace();
+            throw  new InternalServerErrorException();
+        }catch (InvalidArgumentsForTournamentSetupException e) {
+            e.printStackTrace();
+            throw new BadRequestException("No has enviado una configuración válida");
+        }
+        return stageDTOs;
+
     }
 }

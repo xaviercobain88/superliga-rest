@@ -15,7 +15,7 @@ import java.util.Date;
 @Entity
 public class DistributedServiceToken {
 
-    public static final Integer expireMinutes=5;
+    public static final Integer expireMinutes=600;
 
     @Id
     protected  String token;

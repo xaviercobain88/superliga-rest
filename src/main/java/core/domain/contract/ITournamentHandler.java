@@ -19,5 +19,6 @@ public interface ITournamentHandler {
 
     Tournament create(@Min(1) Long userId, @Valid Tournament tournament) throws UnexpectedPersistenceException;
 
-    Stage setStages(@Min(1) Long tournamentId,  @Valid @NotEmpty List<Stage> stages) throws InvalidArgumentsForTournamentSetupException, UnexpectedPersistenceException;
+    Stage setStages(@Min(1) Long tournamentId,  @Valid @NotEmpty List<Stage> stages)
+            throws InvalidArgumentsForTournamentSetupException, UnexpectedPersistenceException;
 }

@@ -20,6 +20,7 @@ public class Tournament implements SecuredManageable {
     @GeneratedValue
     protected Long id;
     protected String name;
+    @Enumerated(EnumType.STRING)
     protected DisciplineEnum discipline;
 
 

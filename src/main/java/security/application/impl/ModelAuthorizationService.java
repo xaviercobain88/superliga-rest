@@ -35,7 +35,6 @@ public class ModelAuthorizationService implements IModelAuthorizationService {
 
 
         try {
-            logger.warning("Si entra");
             return modelAuthorizationHandler.isAllowed(securedManageableTypes, id, user.getId());
         } catch (UnexpectedPersistenceException | InvalidArgumentException  e) {
             e.printStackTrace();
