@@ -3,7 +3,7 @@ package core.infrastructure.impl;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import core.domain.enums.StatusEnum;
+import core.domain.enums.UserStatusEnum;
 import core.domain.exception.DomainModelNotLoadedException;
 import core.domain.contract.IPlayerRepository;
 import core.domain.contract.IUserRepository;
@@ -50,11 +50,17 @@ public class UserRepository extends GenericRepository<User, Long> implements
 	}
 
 	@Override
-	public User findByUsername(String username, StatusEnum status) throws UnexpectedPersistenceException, DomainModelNotLoadedException {
-		String jpql = "select u from User u where u.username=:username and u.status = :status";
+	public User findByUsername(String username, UserStatusEnum status) throws UnexpectedPersistenceException, DomainModelNotLoadedException {
+		String jpql = "select u from User u where u.username=:username ";
+		if(status!=null){
+			jpql+=	" and u.status = :status";
+		}
 		HashMap<String, Object> params = new HashMap<>();
 		params.put("username", username);
-		params.put("status", status);
+		if(status!=null){
+			params.put("status", status);
+		}
+
 		List<User> users = findByQuery(jpql, params);
 		if(users!=null && !users.isEmpty()){
 			return users.get(0);
@@ -64,8 +70,14 @@ public class UserRepository extends GenericRepository<User, Long> implements
 	}
 
 	public User findByUsername(String username) throws UnexpectedPersistenceException, DomainModelNotLoadedException{
-		return findByUsername(username, StatusEnum.ACTIVE);
+		return findByUsername(username, UserStatusEnum.ACTIVE);
 	}
+
+	@Override
+	public User findByUsernameWithoutStatus(String username) throws UnexpectedPersistenceException, DomainModelNotLoadedException {
+		return findByUsername(username, null);
+	}
+
 	@Override
 	public User findByToken(String token) throws UnexpectedPersistenceException, DomainModelNotLoadedException {
 		String jpql = "select t.user from DistributedServiceToken t where t.token=:token";

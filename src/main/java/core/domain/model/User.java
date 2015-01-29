@@ -1,6 +1,8 @@
 package core.domain.model;
 
-import core.domain.enums.StatusEnum;
+import core.domain.enums.UserStatusEnum;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import security.domain.enums.SecuredManageableTypeEnum;
 import security.domain.contract.SecuredManageable;
 import org.hibernate.annotations.AnyMetaDef;
@@ -21,9 +23,7 @@ public class User implements SecuredManageable{
     protected Long id;
     @NotNull(message = "{errors.validation.not_null.user.username}")
     protected String username;
-    @NotNull(message = "{errors.validation.not_null.user.first_name}")
     protected String firstName;
-    @NotNull(message = "{errors.validation.not_null.user.last_name}")
     protected String lastName;
     protected String password;
     protected String token;
@@ -47,7 +47,7 @@ public class User implements SecuredManageable{
             inverseJoinColumns = @JoinColumn(name = "secure_manageable_id"))
     protected List<SecuredManageable> securedManageables;
     @Enumerated(EnumType.STRING)
-    protected StatusEnum status;
+    protected UserStatusEnum status;
 
 
     public void addSecureManageable(SecuredManageable securedManageable) {
@@ -81,6 +81,11 @@ public class User implements SecuredManageable{
             return comparePassword.equals(password);
         }
         return false;
+    }
+
+    public void setInvitedUser(@NotBlank String email){
+        username = email;
+        status = UserStatusEnum.INVITATION;
     }
 
 

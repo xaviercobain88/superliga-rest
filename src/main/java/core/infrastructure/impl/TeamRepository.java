@@ -1,6 +1,6 @@
 package core.infrastructure.impl;
 
-import core.domain.enums.StatusEnum;
+import core.domain.enums.UserStatusEnum;
 import core.domain.contract.ITeamRepository;
 import core.domain.model.Team;
 import core.infrastructure.exception.UnexpectedPersistenceException;
@@ -22,7 +22,7 @@ public class TeamRepository extends GenericRepository<Team, Long> implements
 		String jpql = "select p.team from Player p where p.id = :playerId and p.status = :status";
 		HashMap<String, Object> params = new HashMap<>();
 		params.put("playerId", playerId);
-		StatusEnum status = StatusEnum.ACTIVE;
+		UserStatusEnum status = UserStatusEnum.ACTIVE;
 		params.put("status", status);
 		return findByQuery(jpql, params);
 	}

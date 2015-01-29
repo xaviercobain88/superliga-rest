@@ -1,10 +1,10 @@
 package core.domain.impl;
 
 import core.domain.contract.*;
+import core.domain.enums.InvitationTypeEnum;
+import core.domain.exception.DomainModelNotLoadedException;
 import core.domain.exception.InvalidArgumentsForTournamentSetupException;
-import core.domain.model.Group;
-import core.domain.model.Stage;
-import core.domain.model.Tournament;
+import core.domain.model.*;
 import core.infrastructure.exception.UnexpectedPersistenceException;
 import org.hibernate.validator.constraints.NotEmpty;
 import security.domain.enums.SecuredManageableTypeEnum;
@@ -13,8 +13,10 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by xavier on 1/25/15.
@@ -29,12 +31,36 @@ public class TournamentHandler implements ITournamentHandler {
     protected IStageRepository stageRepository;
     @Inject
     protected IGroupRepository groupRepository;
+    @Inject
+    protected IUserRepository userRepository;
+    @Inject
+    protected IInvitationRepository invitationRepository;
 
     @Override
     public Tournament create(@Min(1) Long userId, @Valid Tournament tournament) throws UnexpectedPersistenceException {
         tournamentRepository.create(tournament);
         modelAdminRepository.create(userId, tournament.getId(), SecuredManageableTypeEnum.TOURNAMENT);
         return tournament;
+    }
+
+    @Override
+    public List<User> sendInvitations(@Min(1) Long tournamentId, @NotEmpty Set<String> emails, @NotNull User sender) throws UnexpectedPersistenceException {
+        ArrayList<User> invitedUsers = new ArrayList<>();
+        for (String email : emails) {
+            User user = new User();
+            try {
+                user = userRepository.findByUsernameWithoutStatus(email);
+            } catch (DomainModelNotLoadedException e) {
+                user.setInvitedUser(email);
+                userRepository.create(user);
+            }
+
+
+            Invitation invitation = new Invitation(sender, user, InvitationTypeEnum.TOURNAMENT_TEAM, tournamentId);
+            invitationRepository.create(invitation);
+            invitedUsers.add(user);
+        }
+        return invitedUsers;
     }
 
     @Override
@@ -62,26 +88,26 @@ public class TournamentHandler implements ITournamentHandler {
         List<Stage> previousSumStages = new ArrayList<>();
         List<Stage> currentSumStages = new ArrayList<>();
         for (Stage stage : stages) {
-            if (currentSumStages == null ||  currentSumStages.isEmpty() ) {
+            if (currentSumStages == null || currentSumStages.isEmpty()) {
                 currentSumStages.add(stage);
             } else if ((stage.getInputTeams().equals(inputTeams)
                     && getTotalOutput(currentSumStages) < stage.getInputTeams())) {
-                stage.setInputSourceStages(previousSumStages);
+                //stage.setInputSourceStages(previousSumStages);
                 setOutputTargetStages(previousSumStages, stage);
                 currentSumStages.add(stage);
             } else if (stage.getInputTeams().equals(getTotalOutput(currentSumStages))) {
-                stage.setInputSourceStages(currentSumStages);
+                //stage.setInputSourceStages(currentSumStages);
                 setOutputTargetStages(currentSumStages, stage);
-                previousSumStages = currentSumStages;
-                currentSumStages.clear();
+                previousSumStages = new ArrayList<>(currentSumStages);
+                currentSumStages = new ArrayList<>();
                 currentSumStages.add(stage);
             } else if (stage.getInputTeams().equals(outputTeams)) {
-                stage.setInputSourceStages(currentSumStages);
+                //stage.setInputSourceStages(currentSumStages);
                 setOutputTargetStages(currentSumStages, stage);
-                previousSumStages = currentSumStages;
-                currentSumStages.clear();
+                previousSumStages = new ArrayList<>(currentSumStages);
+                currentSumStages = new ArrayList<>();
                 currentSumStages.add(stage);
-            } else{
+            } else {
                 throw new InvalidArgumentsForTournamentSetupException("Setup configurations is wrong");
             }
             inputTeams = stage.getInputTeams();

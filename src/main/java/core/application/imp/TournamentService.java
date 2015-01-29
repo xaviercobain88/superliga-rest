@@ -7,13 +7,16 @@ import core.application.exception.BadRequestException;
 import core.application.exception.InternalServerErrorException;
 import core.application.exception.UnauthorizedException;
 import core.domain.contract.ITournamentHandler;
+import core.domain.contract.IUserRepository;
 import core.domain.exception.InvalidArgumentsForTournamentSetupException;
 import core.domain.model.Stage;
 import core.domain.model.Tournament;
+import core.domain.model.User;
 import core.infrastructure.exception.UnexpectedPersistenceException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import security.aop.SecuredModel;
+import security.application.dto.UserDTO;
 import security.domain.enums.SecuredManageableTypeEnum;
 
 import javax.ejb.Stateless;
@@ -24,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by xavier on 1/24/15.
@@ -34,6 +38,8 @@ public class TournamentService implements ITournamentService {
 
     @Inject
     protected ITournamentHandler tournamentHandler;
+    @Inject
+    protected IUserRepository userRepository;
 
     @Override
     @SecuredModel(securedManageableTypes = SecuredManageableTypeEnum.USER)
@@ -74,5 +80,25 @@ public class TournamentService implements ITournamentService {
         }
         return stageDTOs;
 
+    }
+
+    @Override
+    public List<UserDTO> sendInvitations(@Min(1) Long tournamentId, @NotEmpty Set<String> emails, @NotNull UserDTO senderDTO) throws InternalServerErrorException {
+        List<UserDTO> invitedUserDTOs = new ArrayList<>();
+        try {
+            User sender = userRepository.load(senderDTO.getId());
+            List<User> invitedUsers= tournamentHandler.sendInvitations(tournamentId, emails, sender);
+            for (User user: invitedUsers){
+                UserDTO userDTO = new UserDTO();
+                userDTO.setUsername(user.getUsername());
+                userDTO.setFirstName(user.getFirstName());
+                userDTO.setLastName(user.getLastName());
+                invitedUserDTOs.add(userDTO);
+            }
+        } catch (UnexpectedPersistenceException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
+        }
+        return invitedUserDTOs;
     }
 }

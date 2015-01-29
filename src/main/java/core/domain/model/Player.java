@@ -2,7 +2,7 @@ package core.domain.model;
 
 import security.domain.contract.SecuredManageable;
 import security.domain.enums.SecuredManageableTypeEnum;
-import core.domain.enums.StatusEnum;
+import core.domain.enums.UserStatusEnum;
 
 import javax.persistence.*;
 
@@ -25,7 +25,7 @@ public class Player implements SecuredManageable {
     protected Team team;
 
     @Enumerated(EnumType.STRING)
-    protected StatusEnum status;
+    protected UserStatusEnum status;
 
     @Override
     public Long getId() {

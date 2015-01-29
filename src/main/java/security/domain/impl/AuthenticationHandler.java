@@ -1,6 +1,6 @@
 package security.domain.impl;
 
-import core.domain.enums.StatusEnum;
+import core.domain.enums.UserStatusEnum;
 import core.domain.exception.DomainModelNotLoadedException;
 import core.domain.contract.IUserRepository;
 import core.domain.model.User;
@@ -28,7 +28,7 @@ public class AuthenticationHandler implements IAuthenticationHandler {
             throw new InvalidArgumentException("Incorrect username or password");
         }
 
-        User user = userRepository.findByUsername(username, StatusEnum.ACTIVE);
+        User user = userRepository.findByUsername(username, UserStatusEnum.ACTIVE);
         MessageDigest mdEnc = MessageDigest.getInstance("MD5");
         mdEnc.update(password.getBytes(), 0, password.length());
         String hashedPassword = new BigInteger(1, mdEnc.digest()).toString(16); // Hash value
