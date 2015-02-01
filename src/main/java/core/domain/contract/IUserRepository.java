@@ -14,6 +14,6 @@ public interface IUserRepository extends IGenericRepository<User, Long> {
 
     public User findByToken(String Token) throws UnexpectedPersistenceException, DomainModelNotLoadedException;
 
-    User findByUsername(String username) throws UnexpectedPersistenceException, DomainModelNotLoadedException;
+    User findActiveByUsername(String username) throws UnexpectedPersistenceException, DomainModelNotLoadedException;
     User findByUsernameWithoutStatus(String username) throws UnexpectedPersistenceException, DomainModelNotLoadedException;
 }

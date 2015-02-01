@@ -8,7 +8,9 @@ import core.application.exception.InternalServerErrorException;
 import core.application.exception.UnauthorizedException;
 import core.domain.contract.ITournamentHandler;
 import core.domain.contract.IUserRepository;
+import core.domain.exception.DomainModelNotLoadedException;
 import core.domain.exception.InvalidArgumentsForTournamentSetupException;
+import core.domain.exception.InvalidInvitationException;
 import core.domain.model.Stage;
 import core.domain.model.Tournament;
 import core.domain.model.User;
@@ -18,6 +20,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import security.aop.SecuredModel;
 import security.application.dto.UserDTO;
 import security.domain.enums.SecuredManageableTypeEnum;
+import utils.exception.InvalidArgumentException;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -74,7 +77,7 @@ public class TournamentService implements ITournamentService {
         } catch (InvocationTargetException | IllegalAccessException | UnexpectedPersistenceException e) {
             e.printStackTrace();
             throw  new InternalServerErrorException();
-        }catch (InvalidArgumentsForTournamentSetupException e) {
+        }catch (InvalidArgumentsForTournamentSetupException | DomainModelNotLoadedException e) {
             e.printStackTrace();
             throw new BadRequestException("No has enviado una configuración válida");
         }
@@ -83,7 +86,7 @@ public class TournamentService implements ITournamentService {
     }
 
     @Override
-    public List<UserDTO> sendInvitations(@Min(1) Long tournamentId, @NotEmpty Set<String> emails, @NotNull UserDTO senderDTO) throws InternalServerErrorException {
+    public List<UserDTO> sendInvitations(@Min(1) Long tournamentId, @NotEmpty Set<String> emails, @NotNull UserDTO senderDTO) throws InternalServerErrorException, BadRequestException {
         List<UserDTO> invitedUserDTOs = new ArrayList<>();
         try {
             User sender = userRepository.load(senderDTO.getId());
@@ -98,6 +101,12 @@ public class TournamentService implements ITournamentService {
         } catch (UnexpectedPersistenceException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } catch (DomainModelNotLoadedException e) {
+            e.printStackTrace();
+            throw new BadRequestException("No has enviado una configuración válida");
+        }catch ( InvalidInvitationException e) {
+            e.printStackTrace();
+            throw new BadRequestException("La cantidad de invitaciones ha excedido el número de equipos");
         }
         return invitedUserDTOs;
     }

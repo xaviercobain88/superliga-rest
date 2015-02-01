@@ -4,6 +4,7 @@ import api_v1.util.BaseApiResponse;
 import api_v1.util.RestApiListResponse;
 import core.application.contract.ITournamentService;
 import core.application.dto.StageDTO;
+import core.application.exception.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import security.aop.LoggedUser;
 import security.aop.SecuredByToken;
@@ -72,7 +73,7 @@ public class TournamentsController extends BaseController {
             List<UserDTO> userDTOs = tournamentService.sendInvitations(tournamentId, emailSet, userDTO);
             restApiListResponse.setData((ArrayList<UserDTO>) userDTOs);
 
-        } catch (core.application.exception.InternalServerErrorException e) {
+        } catch (core.application.exception.InternalServerErrorException | core.application.exception.BadRequestException e) {
             e.printStackTrace();
             restApiListResponse.addDangerMessage(e.getMessage());
         }

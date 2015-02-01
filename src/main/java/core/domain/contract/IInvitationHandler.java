@@ -4,11 +4,11 @@ import core.domain.exception.DomainModelNotLoadedException;
 import core.domain.exception.InvalidArgumentsForTournamentSetupException;
 import core.domain.exception.InvalidInvitationException;
 import core.domain.model.Stage;
+import core.domain.model.Team;
 import core.domain.model.Tournament;
 import core.domain.model.User;
 import core.infrastructure.exception.UnexpectedPersistenceException;
 import org.hibernate.validator.constraints.NotEmpty;
-import utils.exception.InvalidArgumentException;
 
 import javax.ejb.Local;
 import javax.validation.Valid;
@@ -21,11 +21,8 @@ import java.util.Set;
  * Created by xavier on 1/25/15.
  */
 @Local
-public interface ITournamentHandler {
-
-    Tournament create(@Min(1) Long userId, @Valid Tournament tournament) throws UnexpectedPersistenceException;
-
-    Stage setStages(@Min(1) Long tournamentId,  @Valid @NotEmpty List<Stage> stages)
-            throws InvalidArgumentsForTournamentSetupException, UnexpectedPersistenceException, DomainModelNotLoadedException;
-    List<User> sendInvitations(@Min(1) Long tournamentId, @NotEmpty Set<String> emails, @NotNull User sender) throws UnexpectedPersistenceException, DomainModelNotLoadedException, InvalidInvitationException;
+public interface IInvitationHandler {
+    Team acceptTournamentParticipation(@Min(1) Long invitationId)
+            throws UnexpectedPersistenceException, InvalidInvitationException, DomainModelNotLoadedException;
+    public void refuseTournamentParticipation(@Min(1) Long invitationId) throws UnexpectedPersistenceException, DomainModelNotLoadedException, InvalidInvitationException;
 }

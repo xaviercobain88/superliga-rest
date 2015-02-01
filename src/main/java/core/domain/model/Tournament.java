@@ -22,6 +22,7 @@ public class Tournament implements SecuredManageable {
     protected String name;
     @Enumerated(EnumType.STRING)
     protected DisciplineEnum discipline;
+    protected Integer inputTeams;
 
 
 
@@ -60,4 +61,18 @@ public class Tournament implements SecuredManageable {
         return discipline;
     }
 
+    public void setInputTeams(Integer inputTeams) {
+        this.inputTeams = inputTeams;
+    }
+
+    public Integer getInputTeams() {
+        return inputTeams;
+    }
+
+    public boolean isForTeam(){
+        if(discipline!=null){
+            return discipline.isForTeam();
+        }
+        return false;
+    }
 }

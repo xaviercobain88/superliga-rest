@@ -1,13 +1,17 @@
 package core.domain.impl;
 
 import core.domain.contract.*;
+import core.domain.enums.InvitationStatusEnum;
 import core.domain.enums.InvitationTypeEnum;
 import core.domain.exception.DomainModelNotLoadedException;
 import core.domain.exception.InvalidArgumentsForTournamentSetupException;
+import core.domain.exception.InvalidInvitationException;
 import core.domain.model.*;
 import core.infrastructure.exception.UnexpectedPersistenceException;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import security.domain.enums.SecuredManageableTypeEnum;
+import utils.exception.InvalidArgumentException;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -44,28 +48,69 @@ public class TournamentHandler implements ITournamentHandler {
     }
 
     @Override
-    public List<User> sendInvitations(@Min(1) Long tournamentId, @NotEmpty Set<String> emails, @NotNull User sender) throws UnexpectedPersistenceException {
+    public List<User> sendInvitations(@Min(1) Long tournamentId, @NotEmpty Set<String> emails, @NotNull User sender)
+            throws UnexpectedPersistenceException, DomainModelNotLoadedException,  InvalidInvitationException {
         ArrayList<User> invitedUsers = new ArrayList<>();
+        ArrayList<InvitationStatusEnum> statuses = new ArrayList<>();
+        statuses.add(InvitationStatusEnum.ACCEPTED);
+        statuses.add(InvitationStatusEnum.PENDING);
+        ArrayList<Invitation> invitations = (ArrayList<Invitation>) invitationRepository.findByResource(tournamentId, InvitationTypeEnum.TOURNAMENT_TEAM, statuses);
+        Integer totalInvitations = 0;
+        if (invitations != null && !invitations.isEmpty()) {
+            totalInvitations = invitations.size();
+        }
+        Tournament tournament = tournamentRepository.load(tournamentId);
+        if (tournament == null) {
+            throw new DomainModelNotLoadedException("Tournament not found");
+        }
+        Integer availableInvitations = tournament.getInputTeams() - totalInvitations;
+        if (availableInvitations < emails.size()) {
+            throw new InvalidInvitationException("Invitations exceed available invitations");
+        }
+
         for (String email : emails) {
-            User user = new User();
-            try {
-                user = userRepository.findByUsernameWithoutStatus(email);
-            } catch (DomainModelNotLoadedException e) {
-                user.setInvitedUser(email);
-                userRepository.create(user);
+            if (isValidEmail(tournamentId, InvitationTypeEnum.TOURNAMENT_TEAM, email)) {
+                User user = new User();
+                try {
+                    user = userRepository.findByUsernameWithoutStatus(email);
+                } catch (DomainModelNotLoadedException e) {
+                    user.setInvitedUser(email);
+                    userRepository.create(user);
+                }
+
+
+                Invitation invitation = new Invitation(sender, user, InvitationTypeEnum.TOURNAMENT_TEAM, tournamentId);
+                invitationRepository.create(invitation);
+                invitedUsers.add(user);
             }
 
-
-            Invitation invitation = new Invitation(sender, user, InvitationTypeEnum.TOURNAMENT_TEAM, tournamentId);
-            invitationRepository.create(invitation);
-            invitedUsers.add(user);
         }
         return invitedUsers;
     }
 
+    private boolean isValidEmail(@Min(1) Long polymorphicResourceId, @NotNull InvitationTypeEnum type,
+                                 @NotBlank String email) throws UnexpectedPersistenceException {
+        ArrayList<InvitationStatusEnum> statuses = new ArrayList<>();
+        statuses.add(InvitationStatusEnum.ACCEPTED);
+        statuses.add(InvitationStatusEnum.PENDING);
+
+        User user = null;
+        try {
+            user = userRepository.findByUsername(email, null);
+        } catch (DomainModelNotLoadedException e) {
+            return true;
+        }
+        List<Invitation> invitations = invitationRepository.findByResourceAndEmail(polymorphicResourceId, type, statuses, user.getId());
+        if (invitations == null || invitations.isEmpty()) {
+            return true;
+        }
+        return false;
+
+    }
+
     @Override
     public Stage setStages(@Min(1) Long tournamentId, @Valid @NotEmpty List<Stage> stages)
-            throws InvalidArgumentsForTournamentSetupException, UnexpectedPersistenceException {
+            throws InvalidArgumentsForTournamentSetupException, UnexpectedPersistenceException, DomainModelNotLoadedException {
 
 
         //Saved first in order to auto-generate id
@@ -87,7 +132,16 @@ public class TournamentHandler implements ITournamentHandler {
         Integer outputTeams = 0;
         List<Stage> previousSumStages = new ArrayList<>();
         List<Stage> currentSumStages = new ArrayList<>();
+        Tournament tournament = tournamentRepository.load(tournamentId);
+        if (tournament == null) {
+            throw new DomainModelNotLoadedException("Tournament not found");
+        }
+
+        tournament.setInputTeams(stages.get(0).getInputTeams());
+        tournamentRepository.update(tournament);
+
         for (Stage stage : stages) {
+            stage.setTournament(tournament);
             if (currentSumStages == null || currentSumStages.isEmpty()) {
                 currentSumStages.add(stage);
             } else if ((stage.getInputTeams().equals(inputTeams)

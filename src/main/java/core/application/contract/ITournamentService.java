@@ -22,5 +22,5 @@ public interface ITournamentService {
 
     List<StageDTO> setStages(@Min(1) Long tournamentId, @Valid @NotEmpty List<StageDTO> stageDTOs) throws InternalServerErrorException, BadRequestException;
 
-    List<UserDTO> sendInvitations(@Min(1) Long tournamentId, @NotEmpty Set<String> emails, @NotNull UserDTO sender) throws InternalServerErrorException;
+    List<UserDTO> sendInvitations(@Min(1) Long tournamentId, @NotEmpty Set<String> emails, @NotNull UserDTO sender) throws InternalServerErrorException, BadRequestException;
 }

@@ -69,7 +69,7 @@ public class UserRepository extends GenericRepository<User, Long> implements
 
 	}
 
-	public User findByUsername(String username) throws UnexpectedPersistenceException, DomainModelNotLoadedException{
+	public User findActiveByUsername(String username) throws UnexpectedPersistenceException, DomainModelNotLoadedException{
 		return findByUsername(username, UserStatusEnum.ACTIVE);
 	}
 

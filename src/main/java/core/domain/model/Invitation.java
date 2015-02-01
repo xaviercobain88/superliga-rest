@@ -14,7 +14,7 @@ public class Invitation {
     @Id
     @GeneratedValue
     protected Long id;
-    protected Long polimorphicResourceId;
+    protected Long polymorphicResourceId;
     @Enumerated(EnumType.STRING)
     protected InvitationTypeEnum type;
     @Enumerated(EnumType.STRING)
@@ -26,16 +26,49 @@ public class Invitation {
     @JoinColumn(name = "recipient_user_id")
     protected User recipient;
 
-    public Invitation(@NotNull User sender, @NotNull User recipient, InvitationTypeEnum type, Long polimorphicResourceId){
+    public Invitation(@NotNull User sender, @NotNull User recipient, InvitationTypeEnum type, Long polymorphicResourceId) {
         status = InvitationStatusEnum.PENDING;
         this.sender = sender;
         this.recipient = recipient;
         this.type = type;
-        this.polimorphicResourceId = polimorphicResourceId;
+        this.polymorphicResourceId = polymorphicResourceId;
     }
 
+    public Invitation() {
+    }
 
+    public boolean isValidStatus(InvitationStatusEnum status) {
+        if (status != null && this.status != null && status.equals(this.status)) {
 
+            return true;
+        }
+        return false;
+    }
 
+    public boolean isValidType(InvitationTypeEnum type) {
+        if (type != null && this.type != null && type.equals(this.type)) {
 
+            return true;
+        }
+        return false;
+    }
+
+    public void acceptInvitation(){
+        status = InvitationStatusEnum.ACCEPTED;
+    }
+    public void refuseInvitation(){
+        status = InvitationStatusEnum.REFUSED;
+    }
+
+    public Long getPolymorphicResourceId() {
+        return polymorphicResourceId;
+    }
+
+    public User getRecipient() {
+        return recipient;
+    }
+
+    public User getSender() {
+        return sender;
+    }
 }

@@ -27,7 +27,7 @@ public class UserService implements IUserService {
 
         if (username != null && username.length() >0) {
             try {
-                User user = userRepository.findByUsername(username);
+                User user = userRepository.findActiveByUsername(username);
                 UserDTO userDTO = new UserDTO();
                 BeanUtils.copyProperties(userDTO, user);
                 return userDTO;

@@ -42,6 +42,9 @@ public class Stage {
     @Inject
     @Transient
     protected Logger logger;
+    @ManyToOne
+    @JoinColumn(name = "tournament_id")
+    protected Tournament tournament;
 
     public void createGroups() throws InvalidArgumentsForTournamentSetupException {
         groups = new ArrayList<>();
@@ -173,5 +176,9 @@ public class Stage {
 
     public void setGroupsNumber(Integer groupsNumber) {
         this.groupsNumber = groupsNumber;
+    }
+
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
     }
 }
