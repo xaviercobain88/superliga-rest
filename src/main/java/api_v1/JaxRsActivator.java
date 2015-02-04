@@ -46,6 +46,7 @@ public class JaxRsActivator extends Application {
 		classes.add(UsersController.class);
 		classes.add(TournamentsController.class);
 		classes.add(InvitationsController.class);
+		classes.add(ImagesController.class);
 	}
 
 	@Override
