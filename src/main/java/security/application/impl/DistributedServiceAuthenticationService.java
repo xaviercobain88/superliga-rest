@@ -44,7 +44,7 @@ public class DistributedServiceAuthenticationService implements IDistributedServ
 
         } catch (InvalidArgumentException | DomainModelNotLoadedException e) {
             e.printStackTrace();
-            throw new UnauthorizedException("Usuario o contraseña inválidas");
+            throw new UnauthorizedException("ERROR_INVALID_USERNAME_OR_PASSWORD");
         } catch (UnexpectedPersistenceException | InvocationTargetException | IllegalAccessException | NoSuchAlgorithmException
                 e) {
             e.printStackTrace();

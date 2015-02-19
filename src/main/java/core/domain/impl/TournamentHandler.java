@@ -42,6 +42,7 @@ public class TournamentHandler implements ITournamentHandler {
 
     @Override
     public Tournament create(@Min(1) Long userId, @Valid Tournament tournament) throws UnexpectedPersistenceException {
+
         tournamentRepository.create(tournament);
         modelAdminRepository.create(userId, tournament.getId(), SecuredManageableTypeEnum.TOURNAMENT);
         return tournament;
@@ -182,6 +183,12 @@ public class TournamentHandler implements ITournamentHandler {
         //TODO: Crear los output target
         //TODO: Crear los sources
         return null;
+    }
+
+    @Override
+    public Tournament update(@Valid Tournament tournament) throws UnexpectedPersistenceException {
+        tournamentRepository.update(tournament);
+        return tournament;
     }
 
     private Integer getTotalOutput(List<Stage> outputStages) {

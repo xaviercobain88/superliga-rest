@@ -1,6 +1,8 @@
 package core.domain.model;
 
+import core.application.enums.MessagesEnum;
 import core.domain.enums.DisciplineEnum;
+import core.domain.enums.GenericStatusEnum;
 import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.MetaValue;
@@ -23,15 +25,22 @@ public class Tournament implements SecuredManageable {
     @Enumerated(EnumType.STRING)
     protected DisciplineEnum discipline;
     protected Integer inputTeams;
+    protected GenericStatusEnum status;
 
 
 
     public Tournament(String name, DisciplineEnum discipline) {
+        this();
         this.name = name;
         this.discipline = discipline;
+
+
     }
 
     public Tournament() {
+        this.status = GenericStatusEnum.INACTIVE;
+        this.discipline = DisciplineEnum.FOOTBALL;
+        this.name = MessagesEnum.NEW_TOURNAMENT_NAME.name();
     }
 
     @ManyToMany
@@ -46,6 +55,10 @@ public class Tournament implements SecuredManageable {
     @Override
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
@@ -75,4 +88,5 @@ public class Tournament implements SecuredManageable {
         }
         return false;
     }
+
 }

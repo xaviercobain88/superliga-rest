@@ -23,8 +23,8 @@ import java.io.*;
  */
 @Stateless
 public class S3ImageHandler implements IImageHandler {
-    public static final String AWS_ACCESS_KEY_ID = "AKIAICBHRKRROSYIOTIQ";
-    public static final String AWS_SECRET_KEY = "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";
+    public static final String AWS_ACCESS_KEY_ID = "AKIAIKNWUNN7TJ4DTY2Q";
+    public static final String AWS_SECRET_KEY = "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";
     public static final String BUCKET = "superliga-bucket";
     public static final String DOMAIN = "http://s3-us-west-2.amazonaws.com/";
 

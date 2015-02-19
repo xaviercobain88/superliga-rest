@@ -22,6 +22,7 @@ import core.application.exception.UnauthorizedException;
 import security.aop.LoggedUser;
 import security.application.contract.IDistributedServiceAuthenticationService;
 import security.application.dto.UserDTO;
+import sun.rmi.runtime.Log;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -31,6 +32,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.logging.Logger;
 
 /**
  * JAX-RS Example
@@ -50,12 +53,15 @@ public class LoginController extends BaseController {
     @Inject
     @LoggedUser
     UserDTO userDTO;
+    @Inject
+    Logger logger;
 
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public RestApiResponse<UserDTO> login(@QueryParam(USERNAME) String username, @QueryParam(PASSWORD) String password) {
+    public Response login(@QueryParam(USERNAME) String username, @QueryParam(PASSWORD) String password) {
         RestApiResponse<UserDTO> restApiResponse = new RestApiResponse<>();
+
         try {
             UserDTO userDTO = distributedServiceAuthenticationService.login(username, password);
             //httpRequest.login(username, password);
@@ -65,9 +71,15 @@ public class LoginController extends BaseController {
 
         } catch (InternalServerErrorException | UnauthorizedException  e) {
             e.printStackTrace();
+
             restApiResponse.addDangerMessage(e.getMessage());
+            logger.info("Username: " +username);
+            logger.info("Password: " +password);
+            logger.info("Status code: " +e.getCode());
+            setHttpStatusCode(e.getCode());
+
         }
-        return restApiResponse;
+        return Response.status(getHttpStatusCode()).entity(restApiResponse).build();
 
     }
 

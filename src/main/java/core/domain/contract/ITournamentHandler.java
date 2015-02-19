@@ -28,4 +28,6 @@ public interface ITournamentHandler {
     Stage setStages(@Min(1) Long tournamentId,  @Valid @NotEmpty List<Stage> stages)
             throws InvalidArgumentsForTournamentSetupException, UnexpectedPersistenceException, DomainModelNotLoadedException;
     List<User> sendInvitations(@Min(1) Long tournamentId, @NotEmpty Set<String> emails, @NotNull User sender) throws UnexpectedPersistenceException, DomainModelNotLoadedException, InvalidInvitationException;
+
+    Tournament update(@Valid Tournament tournament) throws UnexpectedPersistenceException;
 }

@@ -39,12 +39,11 @@ public class Stage {
     @OneToMany(mappedBy = "stage")
     protected List<Group> groups;
     protected Integer groupsNumber;
-    @Inject
-    @Transient
-    protected Logger logger;
     @ManyToOne
     @JoinColumn(name = "tournament_id")
     protected Tournament tournament;
+    @Transient
+    @Inject Logger logger;
 
     public void createGroups() throws InvalidArgumentsForTournamentSetupException {
         groups = new ArrayList<>();
@@ -95,10 +94,14 @@ public class Stage {
     }
 
     public boolean isValid() {
-        Double inputLogBase2 = Math.log(outputTeams) / Math.log(2);
+        Double inputLogBase2 = Math.log(inputTeams) / Math.log(2);
         Double inputCheck = inputLogBase2 - Math.ceil(inputLogBase2);
-        Double outputLogBase2 = Math.log(inputTeams) / Math.log(2);
-        Double outputCheck = inputLogBase2 - Math.ceil(outputLogBase2);
+        Double outputLogBase2 = Math.log(outputTeams) / Math.log(2);
+        Double outputCheck = outputLogBase2 - Math.ceil(outputLogBase2);
+        System.out.println("inputCheck: " + inputCheck);
+        System.out.println("outputCheck: " + outputCheck);
+        System.out.println("inputLogBase2: " + inputLogBase2);
+        System.out.println("outputLogBase2: " + outputLogBase2);
         return inputTeams > outputTeams && inputTeams > groupsNumber &&
                 (!mode.equals(PlayingModeEnum.SINGLE_ELIMINATION) || (inputCheck.equals(0d) && outputCheck.equals(0d)));
     }

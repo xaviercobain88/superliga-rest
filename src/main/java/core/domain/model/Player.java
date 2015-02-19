@@ -36,6 +36,8 @@ public class Player implements SecuredManageable {
         return id;
     }
 
+    public Player() {
+    }
 
     public Player(Team team, User user) {
         this.team = team;
